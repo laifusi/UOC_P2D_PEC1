@@ -634,6 +634,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92818772a07a5974f81136c1316b1aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnInformationPanel: {fileID: 1079067774}
+  turnInformationText: {fileID: 635824173}
 --- !u!1 &903280167
 GameObject:
   m_ObjectHideFlags: 0

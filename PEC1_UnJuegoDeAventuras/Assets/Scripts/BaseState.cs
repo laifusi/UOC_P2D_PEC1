@@ -1,4 +1,6 @@
+using System.Collections;
+
 public abstract class BaseState
 {
-    public abstract void EnterState(GameplayManager gameplayManager);
+    public abstract IEnumerator EnterState(GameplayManager gameplayManager);
 }
