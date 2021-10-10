@@ -16,9 +16,16 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private Text turnInformationText;
     [SerializeField] private Text computerDialogueText;
     [SerializeField] private Text playerDialogueText;
+    [SerializeField] private GameObject choicePanel;
+    [SerializeField] private Transform choiceContent;
+    [SerializeField] private GameObject choicePrefab;
 
     private string[] insults;
     private string[] answers;
+
+    private string playerInsult;
+
+    public string PlayerInsult => playerInsult;
 
     private void Start()
     {
@@ -108,9 +115,41 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    public void ActivateChoicesUI(bool activate)
+    {
+        choicePanel.SetActive(activate);
+    }
+
     public void PopulateUI(TypeOfTurn typeOfTurn)
     {
-        
+        if(typeOfTurn == TypeOfTurn.Insult)
+        {
+            for(int i = 0; i < insults.Length; i++)
+            {
+                int index = i;
+                GameObject option = Instantiate(choicePrefab, choiceContent);
+                option.GetComponent<Text>().text = insults[i];
+                option.GetComponent<Button>().onClick.AddListener(() => { PlayerChoice(insults[index]); });
+            }
+        }
+        else if(typeOfTurn == TypeOfTurn.Answer)
+        {
+            for (int i = 0; i < answers.Length; i++)
+            {
+                int index = i;
+                GameObject option = Instantiate(choicePrefab, choiceContent);
+                option.GetComponent<Text>().text = answers[i];
+                option.GetComponent<Button>().onClick.AddListener(() => { PlayerChoice(answers[index]); });
+            }
+        }
+    }
+
+    private void PlayerChoice(string selectedOption)
+    {
+        if (currentState == PlayerInsultsState)
+            StartCoroutine(PlayerInsultsState.OptionSelected(this, selectedOption));
+        else if (currentState == PlayerAnswersState)
+            StartCoroutine(PlayerAnswersState.OptionSelected(this, selectedOption));
     }
 }
 
