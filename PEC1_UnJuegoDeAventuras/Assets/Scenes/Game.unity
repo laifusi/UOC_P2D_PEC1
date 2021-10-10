@@ -636,6 +636,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnInformationPanel: {fileID: 1079067774}
   turnInformationText: {fileID: 635824173}
+  computerDialogueText: {fileID: 195388033}
+  playerDialogueText: {fileID: 903280169}
 --- !u!1 &903280167
 GameObject:
   m_ObjectHideFlags: 0

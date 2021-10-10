@@ -14,9 +14,17 @@ public class GameplayManager : MonoBehaviour
 
     [SerializeField] private Image turnInformationPanel;
     [SerializeField] private Text turnInformationText;
+    [SerializeField] private Text computerDialogueText;
+    [SerializeField] private Text playerDialogueText;
+
+    private string[] insults;
+    private string[] answers;
 
     private void Start()
     {
+        insults = FileReader.ReadFile("Insultos");
+        answers = FileReader.ReadFile("Respuestas");
+
         ChangeToState(StartGameState);
     }
 
@@ -59,9 +67,45 @@ public class GameplayManager : MonoBehaviour
         turnInformationPanel.gameObject.SetActive(activate);
     }
 
-    public void ChooseRandom(TypeOfTurn typeOfTurn)
+    public string ChooseRandom(TypeOfTurn typeOfTurn)
     {
+        string randString = "";
 
+        if(typeOfTurn == TypeOfTurn.Insult)
+        {
+            int randInt = Random.Range(0, insults.Length);
+            randString = insults[randInt];
+        }
+        else if(typeOfTurn == TypeOfTurn.Answer)
+        {
+            int randInt = Random.Range(0, answers.Length);
+            randString = answers[randInt];
+        }
+
+        return randString;
+    }
+    public void ActivateDialogueUI(bool activate, Player player)
+    {
+        if(player == Player.Computer)
+        {
+            computerDialogueText.gameObject.SetActive(activate);
+        }
+        else if(player == Player.Player)
+        {
+            playerDialogueText.gameObject.SetActive(activate);
+        }
+    }
+
+    public void ShowDialogueUI(string text, Player player)
+    {
+        if(player == Player.Computer)
+        {
+            computerDialogueText.text = text;
+        }
+        else if(player == Player.Player)
+        {
+            playerDialogueText.text = text;
+        }
     }
 
     public void PopulateUI(TypeOfTurn typeOfTurn)
