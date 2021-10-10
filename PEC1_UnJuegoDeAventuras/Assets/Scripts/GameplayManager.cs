@@ -19,13 +19,25 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private GameObject choicePanel;
     [SerializeField] private Transform choiceContent;
     [SerializeField] private GameObject choicePrefab;
+    [SerializeField] private Image roundWinnerPanel;
+    [SerializeField] private Text roundWinnerText;
+    [SerializeField] private Text computerVictoriesText;
+    [SerializeField] private Text playerVictoriesText;
 
     private string[] insults;
     private string[] answers;
 
-    private string playerInsult;
+    private int computerInsultIndex;
+    private int computerAnswerIndex;
+    private int playerInsultIndex;
+    private int playerAnswerIndex;
 
-    public string PlayerInsult => playerInsult;
+    private int computerVictories;
+    private int playerVictories;
+    private string lastWinner;
+
+    private const string PlayerString = "JUGADOR";
+    private const string ComputerString = "ORDENADOR";
 
     private void Start()
     {
@@ -60,12 +72,12 @@ public class GameplayManager : MonoBehaviour
         if(player == Player.Computer)
         {
             turnInformationPanel.color = Color.red;
-            turnInformationText.text += "ORDENADOR";
+            turnInformationText.text += ComputerString;
         }
         else if(player == Player.Player)
         {
             turnInformationPanel.color = Color.blue;
-            turnInformationText.text += "JUGADOR";
+            turnInformationText.text += PlayerString;
         }
     }
 
@@ -82,11 +94,13 @@ public class GameplayManager : MonoBehaviour
         {
             int randInt = Random.Range(0, insults.Length);
             randString = insults[randInt];
+            computerInsultIndex = randInt;
         }
         else if(typeOfTurn == TypeOfTurn.Answer)
         {
             int randInt = Random.Range(0, answers.Length);
             randString = answers[randInt];
+            computerAnswerIndex = randInt;
         }
 
         return randString;
@@ -103,7 +117,7 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    public void ShowDialogueUI(string text, Player player)
+    public void UpdateDialogueUI(string text, Player player)
     {
         if(player == Player.Computer)
         {
@@ -122,6 +136,11 @@ public class GameplayManager : MonoBehaviour
 
     public void PopulateUI(TypeOfTurn typeOfTurn)
     {
+        foreach(Transform child in choiceContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         if(typeOfTurn == TypeOfTurn.Insult)
         {
             for(int i = 0; i < insults.Length; i++)
@@ -129,7 +148,7 @@ public class GameplayManager : MonoBehaviour
                 int index = i;
                 GameObject option = Instantiate(choicePrefab, choiceContent);
                 option.GetComponent<Text>().text = insults[i];
-                option.GetComponent<Button>().onClick.AddListener(() => { PlayerChoice(insults[index]); });
+                option.GetComponent<Button>().onClick.AddListener(() => { PlayerChoice(insults[index], index); });
             }
         }
         else if(typeOfTurn == TypeOfTurn.Answer)
@@ -139,17 +158,90 @@ public class GameplayManager : MonoBehaviour
                 int index = i;
                 GameObject option = Instantiate(choicePrefab, choiceContent);
                 option.GetComponent<Text>().text = answers[i];
-                option.GetComponent<Button>().onClick.AddListener(() => { PlayerChoice(answers[index]); });
+                option.GetComponent<Button>().onClick.AddListener(() => { PlayerChoice(answers[index], index); });
             }
         }
     }
 
-    private void PlayerChoice(string selectedOption)
+    private void PlayerChoice(string selectedOption, int index)
     {
         if (currentState == PlayerInsultsState)
+        {
+            playerInsultIndex = index;
             StartCoroutine(PlayerInsultsState.OptionSelected(this, selectedOption));
+        }
         else if (currentState == PlayerAnswersState)
+        {
+            playerAnswerIndex = index;
             StartCoroutine(PlayerAnswersState.OptionSelected(this, selectedOption));
+        }
+    }
+
+    public Player CheckRoundWinner()
+    {
+        Player roundWinner = Player.Computer;
+
+        if(currentState == ComputerAnswersState)
+        {
+            if(playerInsultIndex == computerAnswerIndex)
+            {
+                computerVictories++;
+                lastWinner = ComputerString;
+                roundWinner = Player.Computer;
+            }
+            else
+            {
+                playerVictories++;
+                lastWinner = PlayerString;
+                roundWinner = Player.Player;
+            }
+        }
+        else if(currentState == PlayerAnswersState)
+        {
+            if(computerInsultIndex == playerAnswerIndex)
+            {
+                playerVictories++;
+                lastWinner = PlayerString;
+                roundWinner = Player.Player;
+            }
+            else
+            {
+                computerVictories++;
+                lastWinner = ComputerString;
+                roundWinner = Player.Computer;
+            }
+        }
+
+        return roundWinner;
+    }
+
+    public void ActivateRoundWinnerUI(bool activate)
+    {
+        roundWinnerPanel.gameObject.SetActive(activate);
+    }
+
+    public void UpdateRoundWinnerUI()
+    {
+        roundWinnerText.text = "El ganador de la ronda es el " + lastWinner + "\n Es su turno.";
+        if (lastWinner == PlayerString)
+            roundWinnerPanel.color = Color.blue;
+        else
+            roundWinnerPanel.color = Color.red;
+        computerVictoriesText.text = computerVictories.ToString();
+        playerVictoriesText.text = playerVictories.ToString();
+    }
+
+    public bool CheckGameWinner()
+    {
+        if (computerVictories >= 3 || playerVictories >= 3)
+        {
+            MenuManager.EndGame();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
 
