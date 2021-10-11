@@ -44,6 +44,10 @@ public class GameplayManager : MonoBehaviour
         insults = FileReader.ReadFile("Insultos");
         answers = FileReader.ReadFile("Respuestas");
 
+        ScoreManager.ComputerRoundVictories = 0;
+        ScoreManager.PlayerRoundVictories = 0;
+        ScoreManager.Winner = "";
+
         ChangeToState(StartGameState);
     }
 
@@ -235,6 +239,9 @@ public class GameplayManager : MonoBehaviour
     {
         if (computerVictories >= 3 || playerVictories >= 3)
         {
+            ScoreManager.ComputerRoundVictories = computerVictories;
+            ScoreManager.PlayerRoundVictories = playerVictories;
+            ScoreManager.Winner = lastWinner;
             MenuManager.EndGame();
             return true;
         }
