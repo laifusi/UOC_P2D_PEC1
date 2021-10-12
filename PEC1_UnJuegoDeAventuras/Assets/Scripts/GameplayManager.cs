@@ -15,7 +15,9 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private Image turnInformationPanel;
     [SerializeField] private Text turnInformationText;
     [SerializeField] private Text computerDialogueText;
+    [SerializeField] private GameObject computerDialoguePanel;
     [SerializeField] private Text playerDialogueText;
+    [SerializeField] private GameObject playerDialoguePanel;
     [SerializeField] private GameObject choicePanel;
     [SerializeField] private Transform choiceContent;
     [SerializeField] private GameObject choicePrefab;
@@ -113,11 +115,11 @@ public class GameplayManager : MonoBehaviour
     {
         if(player == Player.Computer)
         {
-            computerDialogueText.gameObject.SetActive(activate);
+            computerDialoguePanel.SetActive(activate);
         }
         else if(player == Player.Player)
         {
-            playerDialogueText.gameObject.SetActive(activate);
+            playerDialoguePanel.SetActive(activate);
         }
     }
 
