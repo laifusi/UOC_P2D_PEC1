@@ -9,7 +9,7 @@ public class ComputerInsultsState : BaseState
         gameplayManager.UpdateDialogueUI(insult, Player.Computer);
         gameplayManager.ActivateDialogueUI(true, Player.Computer);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         gameplayManager.ChangeToState(gameplayManager.PlayerAnswersState);
     }

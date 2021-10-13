@@ -25,6 +25,9 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private Text roundWinnerText;
     [SerializeField] private Text computerVictoriesText;
     [SerializeField] private Text playerVictoriesText;
+    [SerializeField] private AudioSource winLoseSoundEffect;
+    [SerializeField] private AudioClip winSound;
+    [SerializeField] private AudioClip loseSound;
 
     private string[] insults;
     private string[] answers;
@@ -194,12 +197,14 @@ public class GameplayManager : MonoBehaviour
                 computerVictories++;
                 lastWinner = ComputerString;
                 roundWinner = Player.Computer;
+                winLoseSoundEffect.PlayOneShot(loseSound);
             }
             else
             {
                 playerVictories++;
                 lastWinner = PlayerString;
                 roundWinner = Player.Player;
+                winLoseSoundEffect.PlayOneShot(winSound);
             }
         }
         else if(currentState == PlayerAnswersState)
@@ -209,12 +214,14 @@ public class GameplayManager : MonoBehaviour
                 playerVictories++;
                 lastWinner = PlayerString;
                 roundWinner = Player.Player;
+                winLoseSoundEffect.PlayOneShot(winSound);
             }
             else
             {
                 computerVictories++;
                 lastWinner = ComputerString;
                 roundWinner = Player.Computer;
+                winLoseSoundEffect.PlayOneShot(loseSound);
             }
         }
 
@@ -228,7 +235,7 @@ public class GameplayManager : MonoBehaviour
 
     public void UpdateRoundWinnerUI()
     {
-        roundWinnerText.text = "El ganador de la ronda es el " + lastWinner + "\n Es su turno.";
+        roundWinnerText.text = "El ganador de la ronda es el " + lastWinner;
         if (lastWinner == PlayerString)
             roundWinnerPanel.color = Color.blue;
         else
