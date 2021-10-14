@@ -47,8 +47,8 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
-        insults = FileReader.ReadFile("Insultos");
-        answers = FileReader.ReadFile("Respuestas");
+        insults = FileReader.ReadFile(TypeOfTurn.Insult);
+        answers = FileReader.ReadFile(TypeOfTurn.Answer);
 
         ScoreManager.ComputerRoundVictories = 0;
         ScoreManager.PlayerRoundVictories = 0;

@@ -1,0 +1,68 @@
+{
+	"data" : [
+		{
+			"insult" : "¿Has dejado ya de usar pañales?",
+			"answer" : "¿Por qué? ¿Acaso querías pedir uno prestado?"
+		},
+		{
+			"insult" : "¡No hay palabras para describir lo asqueroso que eres!",
+			"answer" : "Sí que las hay, sólo que nunca las has aprendido."
+		},
+		{
+			"insult" : "¡He hablado con simios más educados que tu!",
+			"answer" : "Me alegra que asistieras a tu reunión familiar diaria."
+		},
+		{
+			"insult" : "¡Llevarás mi espada como si fueras un pincho moruno!",
+			"answer" : "Primero deberías dejar de usarla como un plumero."
+		},
+		{
+			"insult" : "¡Luchas como un ganadero!",
+			"answer" : "Qué apropiado, tú peleas como una vaca."
+		},
+		{
+			"insult" : "¡No pienso aguantar tu insolencia aquí sentado!",
+			"answer" : "Ya te están fastidiando otra vez las almorranas, ¿Eh?"
+		},
+		{
+			"insult" : "¡Mi pañuelo limpiará tu sangre!",
+			"answer" : "Ah, ¿Ya has obtenido ese trabajo de barrendero?"
+		},
+		{
+			"insult" : "¡Ha llegado tu HORA, palurdo de ocho patas!",
+			"answer" : "Y yo tengo un SALUDO para ti, ¿Te enteras?"
+		},
+		{
+			"insult" : "¡Una vez tuve un perro más listo que tu!",
+			"answer" : "Te habrá enseñado todo lo que sabes."
+		},
+		{
+			"insult" : "¡Nadie me ha sacado sangre jamás, y nadie lo hará!",
+			"answer" : "¿TAN rápido corres?"
+		},
+		{
+			"insult" : "¡Me das ganas de vomitar!",
+			"answer" : "Me haces pensar que alguien ya lo ha hecho."
+		},
+		{
+			"insult" : "¡Tienes los modales de un mendigo!",
+			"answer" : "Quería asegurarme de que estuvieras a gusto conmigo."
+		},
+		{
+			"insult" : "¡He oído que eres un soplón despreciable!",
+			"answer" : "Qué pena me da que nadie haya oído hablar de ti."
+		},
+		{
+			"insult" : "¡La gente cae a mis pies al verme llegar!",
+			"answer" : "¿Incluso antes de que huelan tu aliento?"
+		},
+		{
+			"insult" : "¡Demasiado bobo para mi nivel de inteligencia!",
+			"answer" : "Estaría acabado si la usases alguna vez."
+		},
+		{
+			"insult" : "¡Obtuve esta cicatriz en una batalla a muerte!",
+			"answer" : "Espero que ya hayas aprendido a no tocarte la nariz."
+		}
+	]
+}

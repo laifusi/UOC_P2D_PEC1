@@ -1,12 +1,44 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class FileReader
 {
-    public static string[] ReadFile(string fileName)
+    public static string[] ReadFile(TypeOfTurn dataType)
     {
-        string fileText = Resources.Load<TextAsset>(fileName).text;
-        string[] fileLines = fileText.Split("\n"[0]);
+        string json = Resources.Load<TextAsset>("Data").text;
+        Data data = JsonUtility.FromJson<Data>(json);
 
-        return fileLines;
+        string[] fileData = new string[data.data.Length];
+
+        if(dataType == TypeOfTurn.Insult)
+        {
+            for(int i = 0; i < data.data.Length; i++)
+            {
+                fileData[i] = data.data[i].insult;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < data.data.Length; i++)
+            {
+                fileData[i] = data.data[i].answer;
+            }
+        }
+
+        return fileData;
+    }
+
+    [Serializable]
+    public struct Data
+    {
+        [Serializable]
+        public struct DataEntry
+        {
+            public string insult;
+            public string answer;
+        }
+
+        public DataEntry[] data;
     }
 }
