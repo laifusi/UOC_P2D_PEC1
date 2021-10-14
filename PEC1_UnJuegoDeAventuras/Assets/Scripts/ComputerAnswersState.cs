@@ -5,6 +5,8 @@ public class ComputerAnswersState : BaseState
 {
     public override IEnumerator EnterState(GameplayManager gameplayManager)
     {
+        gameplayManager.UpdateFixedTurnInfo(Player.Computer, TypeOfTurn.Answer);
+
         string answer = gameplayManager.ChooseRandom(TypeOfTurn.Answer);
         gameplayManager.UpdateDialogueUI(answer, Player.Computer);
         gameplayManager.ActivateDialogueUI(true, Player.Computer);

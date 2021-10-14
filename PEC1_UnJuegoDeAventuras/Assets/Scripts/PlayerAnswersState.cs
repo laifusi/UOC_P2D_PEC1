@@ -5,6 +5,8 @@ public class PlayerAnswersState : BaseState
 {
     public override IEnumerator EnterState(GameplayManager gameplayManager)
     {
+        gameplayManager.UpdateFixedTurnInfo(Player.Player, TypeOfTurn.Answer);
+
         gameplayManager.PopulateUI(TypeOfTurn.Answer);
         gameplayManager.ActivateChoicesUI(true);
 

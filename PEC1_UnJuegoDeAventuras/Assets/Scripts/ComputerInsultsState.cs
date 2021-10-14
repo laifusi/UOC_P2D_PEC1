@@ -5,6 +5,8 @@ public class ComputerInsultsState : BaseState
 {
     public override IEnumerator EnterState(GameplayManager gameplayManager)
     {
+        gameplayManager.UpdateFixedTurnInfo(Player.Computer, TypeOfTurn.Insult);
+
         string insult = gameplayManager.ChooseRandom(TypeOfTurn.Insult);
         gameplayManager.UpdateDialogueUI(insult, Player.Computer);
         gameplayManager.ActivateDialogueUI(true, Player.Computer);

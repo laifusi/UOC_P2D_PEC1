@@ -5,6 +5,8 @@ public class PlayerInsultsState : BaseState
 {
     public override IEnumerator EnterState(GameplayManager gameplayManager)
     {
+        gameplayManager.UpdateFixedTurnInfo(Player.Player, TypeOfTurn.Insult);
+
         gameplayManager.PopulateUI(TypeOfTurn.Insult);
         gameplayManager.ActivateChoicesUI(true);
         yield return new WaitForSeconds(0f);

@@ -25,6 +25,7 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private Text roundWinnerText;
     [SerializeField] private Text computerVictoriesText;
     [SerializeField] private Text playerVictoriesText;
+    [SerializeField] private Text fixedTurnText;
     [SerializeField] private AudioSource winLoseSoundEffect;
     [SerializeField] private AudioClip winSound;
     [SerializeField] private AudioClip loseSound;
@@ -93,6 +94,31 @@ public class GameplayManager : MonoBehaviour
     public void ActivateTurnUI(bool activate)
     {
         turnInformationPanel.gameObject.SetActive(activate);
+    }
+
+    public void UpdateFixedTurnInfo(Player player, TypeOfTurn typeOfTurn)
+    {
+        if(player == Player.Computer)
+        {
+            fixedTurnText.text = "Ordenador";
+            fixedTurnText.color = Color.red;
+        }
+        else if(player == Player.Player)
+        {
+            fixedTurnText.text = "Jugador";
+            fixedTurnText.color = Color.blue;
+        }
+
+        fixedTurnText.text += " ";
+
+        if(typeOfTurn == TypeOfTurn.Insult)
+        {
+            fixedTurnText.text += "Insulta";
+        }
+        else if(typeOfTurn == TypeOfTurn.Answer)
+        {
+            fixedTurnText.text += "Contesta";
+        }
     }
 
     public string ChooseRandom(TypeOfTurn typeOfTurn)
