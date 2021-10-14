@@ -133,9 +133,27 @@ public class GameplayManager : MonoBehaviour
         }
         else if(typeOfTurn == TypeOfTurn.Answer)
         {
-            int randInt = Random.Range(0, answers.Length);
-            randString = answers[randInt];
-            computerAnswerIndex = randInt;
+            if(DifficultyManager.DifficultyLevel == DifficultyLevel.Easy)
+            {
+                int randInt = Random.Range(0, answers.Length);
+                randString = answers[randInt];
+                computerAnswerIndex = randInt;
+            }
+            else if(DifficultyManager.DifficultyLevel == DifficultyLevel.Hard)
+            {
+                int correctAnswer = Random.Range(0, 2);
+                if(correctAnswer == 1)
+                {
+                    randString = answers[playerInsultIndex];
+                    computerAnswerIndex = playerInsultIndex;
+                }
+                else
+                {
+                    int randInt = Random.Range(0, answers.Length);
+                    randString = answers[randInt];
+                    computerAnswerIndex = randInt;
+                }
+            }
         }
 
         return randString;
