@@ -46,6 +46,11 @@ Se han hecho builds tanto para Windows, como para WebGL y Android. Para este úl
 
 Los tres builds se pueden encontrar [aquí](https://fuscor.itch.io/p2d-pec1-un-juego-de-aventuras).
 
+## Dificultades
+La mayor dificultad encontrada durante el trabajo ha sido la lectura del json, ya que, usando una clase en vez de un struct, el `FromJson<T>(string json)` no leía correctamente los datos.
+
+Por otro lado, en la versión web, los sonidos agudos usados en los diálogos no funcionan correctamente. Este error no he sabido solucionarlo.
+
 ## Vídeo
 ![](PEC1_Video.mp4)
 
