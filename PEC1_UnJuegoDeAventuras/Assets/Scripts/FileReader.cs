@@ -1,9 +1,13 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class FileReader
 {
+    /// <summary>
+    /// Method that loads a json and converts its data into arrays of strings.
+    /// </summary>
+    /// <param name="dataType">Type of date we want: insult or answer.</param>
+    /// <returns>Array of strings corresponding to the specified type of data.</returns>
     public static string[] ReadFile(TypeOfTurn dataType)
     {
         string json = Resources.Load<TextAsset>("Data").text;

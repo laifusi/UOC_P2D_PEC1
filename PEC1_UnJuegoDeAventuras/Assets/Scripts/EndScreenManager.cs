@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +12,9 @@ public class EndScreenManager : MonoBehaviour
         UpdateUI();
     }
 
+    /// <summary>
+    /// Method that updates the end screen UI to show the winner of the game, the rounds won by the player and the rounds won by the computer.
+    /// </summary>
     private void UpdateUI()
     {
         winnerText.text = ScoreManager.Winner;
