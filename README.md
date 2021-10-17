@@ -1,91 +1,46 @@
 # PEC 1 - Un juego de aventura
 
+## Cómo jugar
+Al iniciar el juego, se escoge de forma aleatoria quién empieza.
 
+Si empieza el jugador, deberá escoger un insulto de la lista que aparecerá en la pantalla. A continuación, el ordenador escogerá una respuesta. En modo fácil, el ordenador escoge una respuesta aleatoria entre todas las opciones. En modo difícil, tiene una posibilidad de acertar de más del 50%.
 
-## Getting started
+Si, por lo contrario, empieza el ordenador, se escogerá un insulto aleatorio y el jugador deberá escoger la respuesta.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Si el jugador que responde acierta, gana un punto. Si falla, en cambio, el otro jugador se lleva el punto.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+El juego termina cuando uno de los dos jugadores llega a 3 puntos.
 
-## Add your files
+## Estructura e implementación
+El juego se divide en tres escenas: el menú, la escena de juego y la escena final.
 
-- [ ] [Create](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+En el menú, tenemos dos botones: jugar y salir, que, como sus nombres indican, inician la escena de juego y cierran la aplicación, respectivamente. Esto está implementado en el script MenuManager, que se encarga de todos los métodos relacionados con cambios de escenas o cierre de la aplicación.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/lfusterco/pec-1-un-juego-de-aventura.git
-git branch -M main
-git push -uf origin main
-```
+La escena de juego, por su parte, está estructurada mediante una máquina de estados basada en la siguiente estructura:
 
-## Integrate with your tools
+![State Machine](PEC1_StateMachine.png)
 
-- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/project/integrations/)
+Cada estado hereda de la clase abstracta BaseState que los obliga a tener una corrutina `EnterState(GameplayManager gameplayManager)`. Esta corrutina se encargará, en cada caso, de llamar a los métodos de la clase GameplayManager que necesite ese estado. Los estados de jugador, además, tienen una segunda corrutina, `OptionSelected(GameplayManager gameplayManager, string selectedText)`, que se encarga de la funcionalidad cuando el jugador selecciona una de las opciones de texto.
 
-## Collaborate with your team
+Tenemos 5 estados: StartGameState, PlayerInsultsState, ComputerInsultsState, PlayerAnswersState y ComputerAnswersState. Al inicio de juego, el GameplayManager inicia el primer estado: StartGameState, desde el que se decidirá aleatoriamente el primer turno y se pasará al siguiente estado dependiendo de ello. Si el primer turno es del jugador, se pasará al estado PlayerInsultsState, desde el que se actualizará la interfaz para que muestre todos los insultos. Una vez el jugador seleccione uno de los insultos, el método de GameplayManager asignado al botón seleccionado llamará a la corrutina de selección de opciones, que se encargará de actualizar la interfaz, y, tras dos segundos, pasar al siguiente estado, ComputerAnswersState. Si, en cambio, el primer turno es del ordenador, se pasará al estado ComputerInsultsState. Desde este, se escogerá un insulto aleatorio, se actualizará la interfaz, y, tras dos segundos, se pasará al estado de respuesta del jugador, PlayerAnswersState. Si volvemos al estado ComputerAnswersState, vemos que este se encarga de que el GameplayManager escoja una respuesta y actualice la interfaz. A continuación, espera dos segundos antes de comprobar quién es el ganador de la ronda y actualizar la interfaz para mostrarlo. Finalmente, tras otros dos segundos, comprueba si el juego ha terminado, y si no es así, pasa al estado de insulto del ganador del turno. El PlayerAnswersState, por su parte, al entrar al estado se comporta de forma similar al PlayerInsultsState, actualizando la interfaz para que muestre las opciones y teniendo una segunda corrutina para cuando se selecciona una de las opciones. Esta segunda corrutina, en cambio, se comporta del mismo modo que el estado ComputerAnswersState. Actualiza la interfaz, espera dos segundos, comprueba el ganador de la ronda y espera otros dos segundos, y finalmente, comprueba si ha acabado el juego y, de no ser así, pasa el turno al ganador de la ronda.
 
-- [ ] [Invite team members and collaborators](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Automatically merge when pipeline succeeds](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+En el GameplayManager, por su parte, encontramos varios métodos similares entre ellos que se encargan de activar o desactivar los elementos de la interfaz y otros que se encargan de actualizar dichos elementos de interfaz. Estos son los llamados `Activate[...]UI(bool activate)`, y los llamados `Update[...]UI(...)`, respectivamente. Por otra parte, vemos más concretamente el método `PopulateUI(TypeOfTurn typeOfTurn)`, que añade las opciones de insultos o respuestas que tiene el jugador, mediante un prefab, y añade a sus botones un listener en el evento onClick, que llamará al método `PlayerChoice(string selectedOption, int index)`, que, a su vez, iniciará la corrutina `OptionSelected(GameplayManager gameplayManager, string selectedText)` de los estados del jugador de la que ya hemos hablado. Encontramos, además, un método para la elección aleatoria de insulto o respuesta de los turnos del ordenador, `ChooseRandom(TypeOfTurn typeOfTurn)`, además del método de elección aleatoria del turno inicial, `RandomizeTurn()`, y de un método `ChangeState(BaseState state)`, que pasará de un estado a otro y actualizará el estado actual. Finalmente, tenemos los métodos encargados de determinar el ganador de la ronda y el ganador del juego, `CheckRoundWinner()` y `CheckGameWinner()`.
 
-## Test and Deploy
+Por otro lado, tenemos una clase FileReader que se encarga de convertir el archivo json a arrays de strings y cuyo método `ReadFile(TypeOfTurn dataType)` será llamado en el `Start()` del GameplayManager para obtener tanto los insultos, como las respuestas. Para la conversión, es necesario crear un tipo de dato que siga la misma estructura que el json. Hemos hecho, por esto, un struct llamado Data, que contiene un array de otra estructura de datos, DataEntry, que a su vez, contiene los dos strings: insult y answer.
 
-Use the built-in continuous integration in GitLab.
+Además, como ya hemos comentado, hemos añadido dos niveles de difcultad. Para controlar estos, encontramos una clase DifficultyManager que se encarga de controlar los botones que determinan dicho nivel y que contiene la variable estática que el GameplayManager utilizará para decidir cómo el ordenador escoge la respuesta a los insultos.
 
-- [ ] [Get started with GitLab CI/CD](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://docs.gitlab.com/ee/user/clusters/agent/)
+Vemos, también, que en el proyecto hemos utilizado tres enums para definir tres datos determinados: el jugador, el nivel de dificultad y el tipo de turno. Esto nos ayuda a usar un único método para funcionalidades similares sin tener que recurrir a cadenas de texto que fácilmente pueden contener errores y que resultan más difíciles de controlar.
 
-***
+En la escena final, vemos quién ha ganado la partida y cuántas rondas ha ganado cada jugador, además de tener dos botones para volver al menú y para volver a jugar. Los botones, como en el menú, estan controlados por el MenuManager. Para el texto correspondiente al ganador y las rondas ganadas, en cambio, hemos creado una nueva clase, EndScreenManager, que se encargará de actualizar la interfaz con los datos que, anteriormente, hemos almacenado en la escena de juego mediante una clase estática, ScoreManager.
 
-# Editing this README
+## Sprites y sonidos
+Todos los sprites utilizados han sido hechos por mi mediante el programa Inkscape.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://gitlab.com/-/experiment/new_project_readme_content:49f57a0bfadd55767f0067f970589c1e?https://www.makeareadme.com/) for this template.
+En el caso de los efectos de sonido, se han realizado con el programa Bfxr. Los sonidos utilizados para los diálogos son dos secuencias distintas compuestas en Audacity utilizando dos sonidos creados con el programa ya mencionado.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+La música de fondo, por su parte, ha sido descargada de la página [OpenGameArt](https://opengameart.org/). Se trata de dos clips de sonido con licencia CC0. Son [Intro Music](https://opengameart.org/content/intro-music-0) de [RonyDKid](https://opengameart.org/users/ronydkid), utilizada en las pantallas de menú y de final; y [Battle Theme A](https://opengameart.org/content/battle-theme-a) de [cynicmusic](https://opengameart.org/users/cynicmusic), utilizada en la escena de juego.
 
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Builds
+Se han hecho builds tanto para Windows, como para WebGL y Android. Para este último, además, se ha usado el DeviceSimulator, gracias al que se pudieron adaptar los canvas para que en ningún dispositivo desapareciera el texto.
 
