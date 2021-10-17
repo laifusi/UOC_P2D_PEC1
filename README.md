@@ -44,3 +44,8 @@ La música de fondo, por su parte, ha sido descargada de la página [OpenGameArt
 ## Builds
 Se han hecho builds tanto para Windows, como para WebGL y Android. Para este último, además, se ha usado el DeviceSimulator, gracias al que se pudieron adaptar los canvas para que en ningún dispositivo desapareciera el texto.
 
+Los tres builds se pueden encontrar [aquí](https://fuscor.itch.io/p2d-pec1-un-juego-de-aventuras).
+
+## Vídeo
+![](PEC1_Video.mp4)
+
